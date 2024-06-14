@@ -33,6 +33,7 @@ packages:
   remote_package:
     url: https://github.com/alexanderwassbjer/vacuum-door-controller/
     # ref: main
+    refresh: 0d
     files:
       - components/basis.yaml
 
