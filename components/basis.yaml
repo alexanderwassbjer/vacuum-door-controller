@@ -73,8 +73,7 @@ script:
 globals:
   - id: door_state_open
     type: bool
-    restore_value: true
-    max_restore_data_length: 10
+    restore_value: yes
     initial_value: "false"
 
 binary_sensor:
