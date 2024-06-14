@@ -3,6 +3,30 @@
 # Enable Home Assistant API
 api:
 
+# Sensors for ESP version and WIFI information
+text_sensor:
+  # Installed version
+  - platform: template
+    name: "${friendly_name} - Installed version"
+    id: glow_version
+    icon: "mdi:label-outline"
+    entity_category: diagnostic
+    lambda: |-
+      return {"${project_version}"};
+    update_interval: 6h
+  # ESPHome version
+  - platform: version
+    hide_timestamp: true
+    name: "${friendly_name} - ESPHome Version"
+  # IP address and connected SSID
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} - IP Address"
+      icon: mdi:wifi
+    ssid:
+      name: "${friendly_name} - Connected SSID"
+      icon: mdi:wifi-strength-2
+
 switch:
   - platform: gpio
     id: motor_in1
@@ -49,7 +73,7 @@ script:
 globals:
   - id: door_state_open
     type: bool
-    restore_value: yes
+    restore_value: true
     max_restore_data_length: 10
     initial_value: "false"
 
@@ -100,7 +124,7 @@ number:
     id: open_delay
     min_value: 1
     max_value: 20
-    step: 1
+    step: 0.25
     unit_of_measurement: s
     optimistic: true
     initial_value: 14 # Default to 14 seconds
@@ -110,7 +134,7 @@ number:
     id: close_delay
     min_value: 1
     max_value: 20
-    step: 1
+    step: 0.25
     unit_of_measurement: s
     optimistic: true
     initial_value: 16 # Default to 16 seconds
