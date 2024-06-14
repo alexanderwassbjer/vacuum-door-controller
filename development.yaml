@@ -65,23 +65,23 @@ switch:
 script:
   - id: open_door
     then:
+      - globals.set:
+          id: door_state_open
+          value: "true"
       - switch.turn_off: motor_in1
       - switch.turn_on: motor_in2
       - delay: !lambda "return id(open_delay).state * 1000;"
       - script.execute: stop_door
-      - globals.set:
-          id: door_state_open
-          value: "true"
 
   - id: close_door
     then:
+      - globals.set:
+          id: door_state_open
+          value: "false"
       - switch.turn_on: motor_in1
       - switch.turn_off: motor_in2
       - delay: !lambda "return id(close_delay).state * 1000;"
       - script.execute: stop_door
-      - globals.set:
-          id: door_state_open
-          value: "false"
 
   - id: stop_door
     then:

@@ -30,7 +30,7 @@ esp8266:
 packages:
   remote_package:
     url: https://github.com/alexanderwassbjer/vacuum-door-controller/
-    ref: main
+    # ref: main
     files:
       - components/basis.yaml
 
