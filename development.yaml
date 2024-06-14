@@ -1,0 +1,160 @@
+---
+# Vacuum Door Controller Dev
+# This config includes everything except the project & packages.
+#
+# Controls a linear actuator to open and close a door.
+# Is used in my case for a vacuum door.
+# © Alexander Wassbjer
+#
+substitutions:
+  device_name: vacuum-door-controller
+  friendly_name: Vacuum Door Controller Dev
+  project_version: "1.0.1"
+  device_description: "Controls a linear actuator to open and close a door - ESP8266 Generic"
+
+  # Define the GPIO pins
+  motor_in1_pin: GPIO5
+  motor_in2_pin: GPIO4
+  motor_enabled_pin: GPIO14
+
+esphome:
+  name: "${device_name}"
+  comment: "${device_description}"
+  name_add_mac_suffix: false
+
+esp8266:
+  board: d1_mini
+
+# Enable logging
+logger:
+  level: DEBUG
+
+# Enable OTA updates
+ota:
+
+# Allow provisioning Wi-Fi via serial
+improv_serial:
+
+wifi:
+  ap:
+    ssid: "${friendly_name}"
+
+# Enable captive portal for setting WiFi credentials
+captive_portal:
+
+web_server:
+
+# Basic config #
+switch:
+  - platform: gpio
+    id: motor_in1
+    pin: ${motor_in1_pin}
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    id: motor_in2
+    pin: ${motor_in2_pin}
+    restore_mode: ALWAYS_OFF
+
+  - platform: gpio
+    id: motor_enable
+    pin: ${motor_enabled_pin}
+    restore_mode: ALWAYS_ON
+
+# Define script to control the door
+script:
+  - id: open_door
+    then:
+      - switch.turn_off: motor_in1
+      - switch.turn_on: motor_in2
+      - delay: !lambda "return id(open_delay).state * 1000;"
+      - script.execute: stop_door
+      - globals.set:
+          id: door_state_open
+          value: "true"
+
+  - id: close_door
+    then:
+      - switch.turn_on: motor_in1
+      - switch.turn_off: motor_in2
+      - delay: !lambda "return id(close_delay).state * 1000;"
+      - script.execute: stop_door
+      - globals.set:
+          id: door_state_open
+          value: "false"
+
+  - id: stop_door
+    then:
+      - switch.turn_off: motor_in1
+      - switch.turn_off: motor_in2
+
+globals:
+  - id: door_state_open
+    type: bool
+    restore_value: yes
+    max_restore_data_length: 10
+    initial_value: "false"
+
+binary_sensor:
+  - platform: template
+    name: "${friendly_name} - Vacuum Door Open"
+    id: door_open
+    lambda: |-
+      return id(door_state_open) == true;
+
+  - platform: template
+    name: "${friendly_name} - Vacuum Door Closed"
+    id: door_closed
+    lambda: |-
+      return id(door_state_open) == false;
+
+# Enable Home Assistant API
+# Define actions to control the door
+api:
+  services:
+    - service: open_vacuum_door
+      then:
+        - if:
+            condition:
+              lambda: "return id(door_state_open) == false;"
+            then:
+              - script.execute: open_door
+            else:
+              - logger.log: "Door is already open"
+
+    - service: close_vacuum_door
+      then:
+        - if:
+            condition:
+              lambda: "return id(door_state_open) == true;"
+            then:
+              - script.execute: close_door
+            else:
+              - logger.log: "Door is already closed"
+
+    - service: stop_vacuum_door
+      then:
+        - script.execute: stop_door
+
+# Define number components for configuring delays
+# This is based on a linear actuator which has a speed on 10mm/s.
+number:
+  - platform: template
+    name: "${friendly_name} - Open Door Delay"
+    id: open_delay
+    min_value: 1
+    max_value: 20
+    step: 1
+    unit_of_measurement: s
+    optimistic: true
+    initial_value: 14 # Default to 14 seconds
+
+  - platform: template
+    name: "${friendly_name} - Close Door Delay"
+    id: close_delay
+    min_value: 1
+    max_value: 20
+    step: 1
+    unit_of_measurement: s
+    optimistic: true
+    initial_value: 16 # Default to 16 seconds
