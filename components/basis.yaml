@@ -55,16 +55,10 @@ globals:
 
 binary_sensor:
   - platform: template
-    name: "${friendly_name} - Vacuum Door Open"
+    name: "${friendly_name} - Vacuum Door Status"
     id: door_open
     lambda: |-
-      return id(door_state_open) == "true";
-
-  - platform: template
-    name: "${friendly_name} - Vacuum Door Closed"
-    id: door_closed
-    lambda: |-
-      return id(door_state_open) == "false";
+      return id(door_state_open);
 
 # Define actions to control the door
 button:
