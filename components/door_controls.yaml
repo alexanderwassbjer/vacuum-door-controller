@@ -65,3 +65,18 @@ button:
     on_press:
       - script.execute: stop_door
     icon: "mdi:stop"
+
+  - platform: template
+    name: "Toggle Vacuum Status"
+    on_press:
+      - if:
+          condition:
+            lambda: return id(door_state_open);
+          then:
+            - globals.set:
+              id: door_state_open
+              value: "false"
+          else:
+            - globals.set:
+              id: door_state_open
+              value: "true"
