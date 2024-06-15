@@ -64,7 +64,7 @@ number:
     restore_value: yes
     unit_of_measurement: s
     optimistic: true
-    initial_value: 14 # Default to 14 seconds
+    initial_value: 14.25 # Default to 14.25 seconds
 
   - platform: template
     name: "${friendly_name} - Close Door Delay"

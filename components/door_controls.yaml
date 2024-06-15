@@ -24,9 +24,6 @@ script:
 
   - id: stop_door
     then:
-      - globals.set:
-          id: door_state_open
-          value: "true"
       - switch.turn_off: motor_in1
       - switch.turn_off: motor_in2
 
@@ -67,6 +64,9 @@ button:
     name: "Stop Vacuum Door"
     on_press:
       - script.execute: stop_door
+      - globals.set:
+          id: door_state_open
+          value: "true"
     icon: "mdi:stop"
 
   - platform: template
