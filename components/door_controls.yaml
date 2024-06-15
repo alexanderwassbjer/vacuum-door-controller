@@ -74,9 +74,9 @@ button:
             lambda: return id(door_state_open);
           then:
             - globals.set:
-              id: door_state_open
-              value: "false"
+                id: door_state_open
+                value: "false"
           else:
             - globals.set:
-              id: door_state_open
-              value: "true"
+                id: door_state_open
+                value: "true"
