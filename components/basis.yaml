@@ -50,20 +50,20 @@ switch:
     pin: ${motor_enabled_pin}
     restore_mode: ALWAYS_ON
 
-  - platform: template
-    name: "${friendly_name} - Toggle is door open"
-    id: door_status_is_open
-    entity_category: config
-    optimistic: true
-    restore_value: yes
-    turn_on_action:
-      - switch.template.publish:
-          id: door_status_is_open
-          state: ON
-    turn_off_action:
-      - switch.template.publish:
-          id: door_status_is_open
-          state: OFF
+  # - platform: template
+  #   name: "${friendly_name} - Toggle is door open"
+  #   id: door_status_is_open
+  #   entity_category: config
+  #   optimistic: true
+  #   restore_value: yes
+  #   turn_on_action:
+  #     - switch.template.publish:
+  #         id: door_status_is_open
+  #         state: ON
+  #   turn_off_action:
+  #     - switch.template.publish:
+  #         id: door_status_is_open
+  #         state: OFF
 
 # Define number components for configuring delays
 # This is based on a linear actuator which has a speed on 10mm/s.
