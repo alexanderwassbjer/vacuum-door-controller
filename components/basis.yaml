@@ -61,6 +61,7 @@ number:
     max_value: 20
     step: 0.25
     mode: box
+    restore_value: yes
     unit_of_measurement: s
     optimistic: true
     initial_value: 14 # Default to 14 seconds
@@ -73,6 +74,7 @@ number:
     max_value: 20
     step: 0.25
     mode: box
+    restore_value: yes
     unit_of_measurement: s
     optimistic: true
     initial_value: 16 # Default to 16 seconds

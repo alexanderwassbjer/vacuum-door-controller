@@ -1,2 +1,2 @@
 packages:
-  alexanderwassbjer.vacuum-door-controller: github://alexanderwassbjer/vacuum-door-controller/vacuum-door-controller/esp8266.yaml@main
+  alexanderwassbjer.vacuum-door-controller: github://alexanderwassbjer/vacuum-door-controller/vacuum-door-controller/esp8266.yaml

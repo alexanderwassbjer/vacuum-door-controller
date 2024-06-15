@@ -1,0 +1,13 @@
+substitutions:
+  f_name: vacuum-door-controller-817097
+
+packages:
+  alexanderwassbjer.vacuum-door-controller: github://alexanderwassbjer/vacuum-door-controller/vacuum-door-controller/esp8266.yaml
+
+esphome:
+  friendly_name: ${f_name}
+  name_add_mac_suffix: false
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
