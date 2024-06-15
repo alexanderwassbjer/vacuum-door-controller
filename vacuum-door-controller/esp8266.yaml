@@ -20,6 +20,7 @@ esphome:
   name: "${device_name}"
   comment: "${device_description}"
   name_add_mac_suffix: false
+  restore_from_flash: true
   project:
     name: "alexanderwassbjer.vacuum-door-controller"
     version: "${project_version}"
@@ -34,6 +35,7 @@ packages:
     refresh: 0d
     files:
       - components/basis.yaml
+      - components/door_controls.yaml
 
 # Enable logging
 logger:

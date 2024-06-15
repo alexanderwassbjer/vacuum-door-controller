@@ -35,6 +35,7 @@ packages:
     refresh: 0d
     files:
       - components/basis.yaml
+      - components/door_controls.yaml
 
 # Enable logging
 logger:
