@@ -8,7 +8,7 @@
 substitutions:
   device_name: vacuum-door-controller
   friendly_name: Vacuum Door Controller
-  project_version: "1.0.7"
+  project_version: "1.0.8"
   device_description: "Controls a linear actuator to open and close a door - ESP32 Generic"
 
   # Define the GPIO pins
