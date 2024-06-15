@@ -20,13 +20,13 @@ esphome:
   name: "${device_name}"
   comment: "${device_description}"
   name_add_mac_suffix: false
-  esp8266_restore_from_flash: true
   project:
     name: "alexanderwassbjer.vacuum-door-controller"
     version: "${project_version}"
 
 esp8266:
   board: esp01_1m
+  esp8266_restore_from_flash: true
 
 packages:
   remote_package:
