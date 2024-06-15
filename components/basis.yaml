@@ -3,6 +3,29 @@
 # Enable Home Assistant API
 api:
 
+globals:
+  - id: door_state_open
+    type: bool
+    restore_value: yes
+    max_restore_data_length: 10
+    initial_value: "false"
+
+switch:
+  - platform: template
+    name: "${friendly_name} - Toggle is door open"
+    id: door_status_is_open
+    entity_category: config
+    optimistic: true
+    restore_value: yes
+    turn_on_action:
+      - switch.template.publish:
+          id: door_status_is_open
+          state: ON
+    turn_off_action:
+      - switch.template.publish:
+          id: door_status_is_open
+          state: OFF
+
 # Sensors for ESP version and WIFI information
 text_sensor:
   # Installed version
@@ -43,87 +66,17 @@ switch:
     pin: ${motor_enabled_pin}
     restore_mode: ALWAYS_ON
 
-# Define script to control the door
-script:
-  - id: open_door
-    then:
-      - globals.set:
-          id: door_state_open
-          value: "true"
-      - switch.turn_off: motor_in1
-      - switch.turn_on: motor_in2
-      - delay: !lambda "return id(open_delay).state * 1000;"
-      - script.execute: stop_door
-
-  - id: close_door
-    then:
-      - globals.set:
-          id: door_state_open
-          value: "false"
-      - switch.turn_on: motor_in1
-      - switch.turn_off: motor_in2
-      - delay: !lambda "return id(close_delay).state * 1000;"
-      - script.execute: stop_door
-
-  - id: stop_door
-    then:
-      - switch.turn_off: motor_in1
-      - switch.turn_off: motor_in2
-
-globals:
-  - id: door_state_open
-    type: bool
-    restore_value: yes
-    initial_value: "false"
-
-binary_sensor:
-  - platform: template
-    name: "${friendly_name} - Vacuum Door Status"
-    id: door_open
-    lambda: |-
-      return id(door_state_open);
-
-# Define actions to control the door
-button:
-  - platform: template
-    name: "Open Vacuum Door"
-    on_press:
-      - if:
-          condition:
-            lambda: return !id(door_state_open);
-          then:
-            - script.execute: open_door
-          else:
-            - logger.log: "Door is already open"
-    icon: "mdi:door-open"
-
-  - platform: template
-    name: "Close Vacuum Door"
-    on_press:
-      - if:
-          condition:
-            lambda: return id(door_state_open);
-          then:
-            - script.execute: close_door
-          else:
-            - logger.log: "Door is already closed"
-    icon: "mdi:door-closed"
-
-  - platform: template
-    name: "Stop Vacuum Door"
-    on_press:
-      - script.execute: stop_door
-    icon: "mdi:stop"
-
 # Define number components for configuring delays
 # This is based on a linear actuator which has a speed on 10mm/s.
 number:
   - platform: template
     name: "${friendly_name} - Open Door Delay"
     id: open_delay
+    entity_category: config
     min_value: 1
     max_value: 20
     step: 0.25
+    mode: box
     unit_of_measurement: s
     optimistic: true
     initial_value: 14 # Default to 14 seconds
@@ -131,9 +84,11 @@ number:
   - platform: template
     name: "${friendly_name} - Close Door Delay"
     id: close_delay
+    entity_category: config
     min_value: 1
     max_value: 20
     step: 0.25
+    mode: box
     unit_of_measurement: s
     optimistic: true
     initial_value: 16 # Default to 16 seconds

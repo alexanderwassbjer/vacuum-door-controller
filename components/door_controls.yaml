@@ -1,0 +1,69 @@
+# Door controls config #
+
+# Define script to control the door
+script:
+  - id: open_door
+    then:
+      - globals.set:
+          id: door_state_open
+          value: "true"
+      - switch.turn_on: door_switch
+      - switch.turn_off: motor_in1
+      - switch.turn_on: motor_in2
+      - delay: !lambda "return id(open_delay).state * 1000;"
+      - script.execute: stop_door
+
+  - id: close_door
+    then:
+      - globals.set:
+          id: door_state_open
+          value: "false"
+      - switch.turn_off: door_switch
+      - switch.turn_on: motor_in1
+      - switch.turn_off: motor_in2
+      - delay: !lambda "return id(close_delay).state * 1000;"
+      - script.execute: stop_door
+
+  - id: stop_door
+    then:
+      - switch.turn_off: motor_in1
+      - switch.turn_off: motor_in2
+
+binary_sensor:
+  - platform: template
+    name: "${friendly_name} - Vacuum Door Status"
+    id: door_open
+    lambda: |-
+      return id(door_state_open);
+
+# Define actions to control the door
+button:
+  - platform: template
+    name: "Open Vacuum Door"
+    on_press:
+      - if:
+          condition:
+            lambda: return !id(door_state_open);
+          then:
+            - script.execute: open_door
+          else:
+            - logger.log: "Door is already open"
+    icon: "mdi:door-open"
+
+  - platform: template
+    name: "Close Vacuum Door"
+    on_press:
+      - if:
+          condition:
+            lambda: return id(door_state_open);
+          then:
+            - script.execute: close_door
+          else:
+            - logger.log: "Door is already closed"
+    icon: "mdi:door-closed"
+
+  - platform: template
+    name: "Stop Vacuum Door"
+    on_press:
+      - script.execute: stop_door
+    icon: "mdi:stop"
