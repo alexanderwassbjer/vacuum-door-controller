@@ -8,7 +8,7 @@
 substitutions:
   device_name: vacuum-door-controller
   friendly_name: Vacuum Door Controller
-  project_version: "1.0.4"
+  project_version: "1.0.5"
   device_description: "Controls a linear actuator to open and close a door - ESP8266 Generic"
 
   # Define the GPIO pins
@@ -20,13 +20,13 @@ esphome:
   name: "${device_name}"
   comment: "${device_description}"
   name_add_mac_suffix: false
-  restore_from_flash: true
   project:
     name: "alexanderwassbjer.vacuum-door-controller"
     version: "${project_version}"
 
 esp8266:
   board: esp01_1m
+  restore_from_flash: true
 
 packages:
   remote_package:
