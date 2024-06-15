@@ -1,11 +1,11 @@
 substitutions:
-  f_name: vacuum-door-controller-817097
+  name: vacuum-door-controller-817097
 
 packages:
   alexanderwassbjer.vacuum-door-controller: github://alexanderwassbjer/vacuum-door-controller/vacuum-door-controller/esp8266.yaml
 
 esphome:
-  friendly_name: ${f_name}
+  name: ${name}
   name_add_mac_suffix: false
 
 esp8266:

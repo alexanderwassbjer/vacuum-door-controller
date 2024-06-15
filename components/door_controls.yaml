@@ -24,6 +24,9 @@ script:
 
   - id: stop_door
     then:
+      - globals.set:
+          id: door_state_open
+          value: "true"
       - switch.turn_off: motor_in1
       - switch.turn_off: motor_in2
 
