@@ -18,7 +18,7 @@ substitutions:
   motor_enabled_pin: GPIO14 # D5
   switch_pin: GPIO12 # D6
 
-  enable_microswitch: false
+  enable_microswitch: "false"
 
 esphome:
   name: "${device_name}"
