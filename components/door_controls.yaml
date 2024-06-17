@@ -50,7 +50,7 @@ button:
     on_press:
       - if:
           condition:
-            lambda: return ${enable_microswitch} === true;
+            lambda: return ${enable_microswitch} == true;
           then:
             - if:
                 condition:
@@ -74,7 +74,7 @@ button:
     on_press:
       - if:
           condition:
-            lambda: return ${enable_microswitch} === true;
+            lambda: return ${enable_microswitch} == true;
           then:
             - if:
                 condition:
