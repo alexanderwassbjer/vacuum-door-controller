@@ -29,10 +29,19 @@ script:
 
 binary_sensor:
   - platform: template
-    name: "${friendly_name} - Vacuum Door Status"
+    name: "${friendly_name} - Vacuum Door Status Internal"
     id: door_open
     lambda: |-
       return id(door_state_open);
+  - platform: gpio
+    pin:
+      number: ${switch_pin}
+      mode: INPUT_PULLUP
+    name: "${friendly_name} - Vacuum Door Micro Switch Door Status"
+    device_class: "power"
+    id: door_state_open_switch
+    filters:
+      - invert: true
 
 # Define actions to control the door
 button:
@@ -41,11 +50,23 @@ button:
     on_press:
       - if:
           condition:
-            lambda: return !id(door_state_open);
+            lambda: return ${enable_microswitch} === true;
           then:
-            - script.execute: open_door
+            - if:
+                condition:
+                  binary_sensor.is_off: door_state_open_switch
+                then:
+                  - script.execute: open_door
+                else:
+                  - logger.log: "Door is already open"
           else:
-            - logger.log: "Door is already open"
+            - if:
+                condition:
+                  lambda: return !id(door_state_open);
+                then:
+                  - script.execute: open_door
+                else:
+                  - logger.log: "Door is already open"
     icon: "mdi:door-open"
 
   - platform: template
@@ -53,11 +74,23 @@ button:
     on_press:
       - if:
           condition:
-            lambda: return id(door_state_open);
+            lambda: return ${enable_microswitch} === true;
           then:
-            - script.execute: close_door
+            - if:
+                condition:
+                  binary_sensor.is_on: door_state_open_switch
+                then:
+                  - script.execute: close_door
+                else:
+                  - logger.log: "Door is already closed"
           else:
-            - logger.log: "Door is already closed"
+            - if:
+                condition:
+                  lambda: return id(door_state_open);
+                then:
+                  - script.execute: close_door
+                else:
+                  - logger.log: "Door is already closed"
     icon: "mdi:door-closed"
 
   - platform: template
