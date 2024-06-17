@@ -19,4 +19,4 @@ Components:
 For custom GPIO ports then default. Add it as substitutions in your config.
 
 For the microswitch:
-Connect the NO and COM to the esp.
+Connect the NC and COM to the esp.

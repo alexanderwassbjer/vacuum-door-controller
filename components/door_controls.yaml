@@ -40,6 +40,8 @@ binary_sensor:
     name: "${friendly_name} - Vacuum Door Micro Switch Door Status"
     device_class: "power"
     id: door_state_open_switch
+    filters:
+      - invert:
 
 # Define actions to control the door
 button:
