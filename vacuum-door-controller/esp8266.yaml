@@ -9,7 +9,7 @@
 substitutions:
   device_name: vacuum-door-controller
   friendly_name: Vacuum Door Controller
-  project_version: "1.1.1"
+  project_version: "1.1.2"
   device_description: "Controls a linear actuator to open and close a door - ESP8266 Generic"
 
   # Define the GPIO pins
